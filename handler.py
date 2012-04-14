@@ -12,9 +12,6 @@ class Handler():
 		self.settings = settings.Settings(self)
 		self.toolbar = toolbar.Toolbar(self)
 		self.tabbar = tabbar.Tabbar(self)
-		#self.current_files = {}
-		#username = os.system('$HOME')
-		#print username
 		self.current_folder = ('/home/'+getpass.getuser())
 
 		
@@ -38,13 +35,13 @@ class Handler():
 		d.destroy()
 		
 	def on_click_save(self, widget):
-		tab = self.tabbar.get_current_page()
-		doc = self.tabbar.docs[tab]
-		filePath = self.tabbar.files[tab]
-		#lineNumbers = self.tabbar.lineNumbers[tab]
-		self.save_doc(doc, filePath)
+		tab_num = self.tabbar.get_current_page()
+		self.save_doc(tab_num)
 		
-	def save_doc(self, doc, filePath):
+	def save_doc(self, tab_num):
+		doc = self.tabbar.docs[tab_num]
+		lineNumbers = self.tabbar.docs[tab_num]
+		filePath = self.tabbar.files[tab_num]
 		if filePath == None:
 			d = self.save_dialog()
 			response = d.run()
@@ -57,9 +54,8 @@ class Handler():
 				doc.lastSaved = text
 				self.current_folder = d.get_current_folder()
 				self.toolbar.actions['save'].set_sensitive(False)
-				current_tab = self.tabbar.page_num(doc)
-				self.tabbar.labels[current_tab].set_text(self.strip_filename(filePath))
-				self.tabbar.files[current_tab] = filePath
+				self.tabbar.labels[tab_num].set_text(self.strip_filename(filePath))
+				self.tabbar.files[tab_num] = filePath
 			d.destroy()
 		else:
 			f = open(filePath, 'w')

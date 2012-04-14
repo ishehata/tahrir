@@ -1,5 +1,4 @@
-import gtk
-from tab import *
+import gtk, textview, lines
 
 class Tabbar(gtk.Notebook):
 	"""Class Tabbar() is a GtkNotebook, which contains tabs, textview and lines number inside it."""
@@ -57,12 +56,12 @@ class Tabbar(gtk.Notebook):
 		self.set_current_page(-1)
 		doc.grab_focus()
 		self.files.append(filename)
-		close.connect('clicked', self.on_click_close, doc, lineNumbers, filename)
+		close.connect('clicked', self.on_click_close, sw, doc, lineNumbers, filename)
 		
 		
 		
-	def on_click_close(self, widget, doc, lineNumbers, filePath):
-		self.close_tab(doc, lineNumbers, filePath)
+	def on_click_close(self, widget, sw, doc, lineNumbers, filePath):
+		self.close_tab(sw, doc, lineNumbers, filePath)
 		
 	def close_tab_by_id(self, tab):
 		doc = self.docs[tab]
@@ -87,27 +86,28 @@ class Tabbar(gtk.Notebook):
 			#	self.lineNumbers.remove(lineNumbers)
 			d.destroy()
 	
-	def close_tab(self, doc, lineNumbers, filePath):
-		tab = self.page_num(doc)
-		self.set_current_page(tab)
+	def close_tab(self, sw, doc, lineNumbers, filePath):
+		tab = self.page_num(sw)
+		print tab
+		#self.set_current_page(tab)
 		if doc.has_unsaved_changes() == False:
 			self.remove_page(tab)
-		#	self.docs.remove(doc)
-		#	self.lineNumbers.remove(lineNumbers)
+			self.docs.remove(doc)
+			self.lineNumbers.remove(lineNumbers)
 		else:
 			d = self.handler.prompt_save_dialog()
 			response = d.run()
 			if response == -1:
 				self.remove_page(tab)
-		#		self.docs.remove(doc)
-		#		self.lineNumbers.remove(lineNumbers)
+				self.docs.remove(doc)
+				self.lineNumbers.remove(lineNumbers)
 			elif response == 0:
 				pass
 			elif response == 1:
-				self.handler.save_doc(doc, filePath)
+				self.handler.save_doc(tab)
 				self.remove_page(tab)
-		#		self.docs.remove(doc)
-		#		self.lineNumbers.remove(lineNumbers)
+				self.docs.remove(doc)
+				self.lineNumbers.remove(lineNumbers)
 			d.destroy()
 			
 	def check_actions(self, widget):
