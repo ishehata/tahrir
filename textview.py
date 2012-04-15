@@ -12,42 +12,37 @@ class Document(gtk.TextView):
 		self.set_style(bg, fontColor)
 		self.buffer.set_text(text)		
 		self.set_left_margin(5)
+		self.boldBlue = self.buffer.create_tag('boldBlue')
+		self.boldBlue.set_property('foreground', 'blue')
+		self.do_highlight(None)
 		self.buffer.connect('changed', self.handler.set_numbers)
-		self.buffer.connect('changed', self.code_highlight)
+		self.buffer.connect('changed', self.do_highlight)
 		self.buffer.connect('changed', self.set_buffer_modified)
 		#self.buffer.connect('modified_changed', self.handler.toolbar.activate_actions)
-		#self.do_highlight()
+		
 		self.clipboard = gtk.Clipboard()
-		self.searchTag = gtk.TextTag()
-		self.searchTag.set_property('background', 'red')
-		self.tagTable.add(self.searchTag)
-		self.codeTag = gtk.TextTag()
-		self.tagTable.add(self.codeTag)
-		self.codeTag.set_property('foreground', 'red')
-		self.search_iter = self.buffer.get_start_iter()
+		self.searchTag = self.buffer.create_tag('yellowBackground')
+		self.searchTag.set_property('background', 'yellow')
 		
-	def code_highlight(self, widget):
-		text = self.get_text()
-		
-		txt = text.split(' ')
-		if 'def' in text:
-			self.buffer.apply_tag(self.codeTag,self.buffer.get_start_iter(), self.buffer.get_end_iter())
 		
 	def set_buffer_modified(self, widget):
 		self.buffer.set_modified(True)
 		self.handler.toolbar.activate_save_button()
 		
 	def search(self, parameter):
+		self.buffer.remove_tag(self.searchTag, self.buffer.get_start_iter(), self.buffer.get_end_iter())
 		start_iter = self.buffer.get_start_iter()
-		found = start_iter.forward_search(parameter, 0, None)
-		if found:
-			match_start, self.match_end = found
-			self.buffer.select_range(match_start, self.match_end)
-			#self.search_iter = match_end
-		#if direction == 'forward':
-		#	start_iter = end_iter
-		#	self.find_text(start_iter, parameter)
-	#	self.buffer.apply_tag(self.searchTag, self.buffer.get_start_iter(), self.buffer.get_end_iter())
+		result = self.find_text(parameter)
+		if result:
+			self.match_start = result[0][0]
+			self.match_end = result[0][1]
+			self.buffer.select_range(self.match_start, self.match_end)
+			for word in result:
+				match_start = word[0]
+				match_end = word[1]
+				self.buffer.apply_tag(self.searchTag, match_start, match_end)
+		else:
+			pass
 	
 	def search_forward(self, parameter):
 		if self.match_end:
@@ -69,21 +64,29 @@ class Document(gtk.TextView):
 			self.match_start, self.match_end = found
 			self.buffer.select_range(self.match_start, self.match_end)
 			
-	def find_text(self, start_iter, parameter):
-		found = start_iter.forward_search(parameter, 0, None)
-		while found:
-			match_start, match_end = found
-			self.buffer.select_range(match_start, match_end)
-		return match_end
+	def find_text(self, parameter):
+		start_iter = self.buffer.get_start_iter()
+		result = []
+		while True:
+			found = start_iter.forward_search(parameter, 0, None)
+			if found:
+				match_start, match_end = found
+				result.append((match_start, match_end))
+				start_iter = match_end
+			else:
+				break
+		return result
 		
-	def do_highlight(self, txt):
-		tag = gtk.TextTag()
-		print txt
-		words = txt.split('/')
-		for word in words:
-			if word == 'def':
-				tag.set_priority('foreground', 'red')
-		self.tagTable.add(tag)
+	def do_highlight(self, widget):
+		self.iters = []
+		start_iter = self.buffer.get_start_iter()
+		inBoldBlue = ['def', 'if', 'True', 'for', 'False', 'While', 'pass', 'break', 'return', 'elif', 'else']
+		for term in inBoldBlue:
+			result = self.find_text(term)
+			if result:
+				for iter in result:
+					self.buffer.apply_tag(self.boldBlue, iter[0], iter[1])
+				
 		
 	def set_style(self, bg, fontColor):
 		self.modify_base(gtk.STATE_NORMAL, gtk.gdk.Color(bg))

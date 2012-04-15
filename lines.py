@@ -9,6 +9,7 @@ class LineNumbers(gtk.TextView):
 		self.set_cursor_visible(False)
 		self.doc = doc
 		self.set_right_margin(5)
+		self.set_left_margin(1)
 		self.buffer = gtk.TextBuffer()
 		self.set_buffer(self.buffer)
 		self.set_style(bg, fontColor)
