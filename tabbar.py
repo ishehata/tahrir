@@ -15,12 +15,21 @@ class Tabbar(gtk.Notebook):
 		self.files = []
 		self.init_tab()
 		self.connect('change-current-page', self.check_actions)
+		self.connect('page-removed', self.set_actions_off)
 		
 
 	def init_tab(self):
 		"""Constructs the very first tab"""
 		self.create_new_tab()
 		
+	def set_actions_off(self, widget, child, page_num):
+		tabs_num = self.get_n_pages()
+		if tabs_num == 0:
+			self.handler.toolbar.deactivate_save_button()
+			self.handler.toolbar.deactivate_actions()
+		else:
+			pass
+			
 	def create_new_tab(self, label = 'Untitled Document', text='', filename=None):
 		"""This functions adds a new tab to the GtkNotebook, the net tab has a GtkScrolledWindow as a child,
 			which containes lines number and GtkTextView."""
@@ -57,6 +66,8 @@ class Tabbar(gtk.Notebook):
 		doc.grab_focus()
 		self.files.append(filename)
 		close.connect('clicked', self.on_click_close, sw, doc, lineNumbers, filename)
+		self.handler.toolbar.activate_actions(None)
+	
 		
 		
 		
@@ -90,7 +101,8 @@ class Tabbar(gtk.Notebook):
 		tab = self.page_num(sw)
 		print tab
 		#self.set_current_page(tab)
-		if doc.has_unsaved_changes() == False:
+		#if doc.has_unsaved_changes() == False:
+		if doc.buffer.get_modified() == False:
 			self.remove_page(tab)
 			self.docs.remove(doc)
 			self.lineNumbers.remove(lineNumbers)

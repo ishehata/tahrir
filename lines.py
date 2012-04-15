@@ -5,8 +5,9 @@ class LineNumbers(gtk.TextView):
 	def __init__(self, handler, doc, bg, fontColor):
 		super(LineNumbers, self).__init__()
 		self.set_can_focus(False)
-		self.doc = doc
 		self.set_editable(False)
+		self.set_cursor_visible(False)
+		self.doc = doc
 		self.set_right_margin(5)
 		self.buffer = gtk.TextBuffer()
 		self.set_buffer(self.buffer)

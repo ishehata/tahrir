@@ -1,13 +1,13 @@
 import gtk, handler, layout
 
-class Maximus(gtk.Window):
-	"""Maximus is a neat,simple and elegant text editor."""
+class Tahrir(gtk.Window):
+	"""Tahrir is a neat,simple and elegant text editor."""
 	
 	def __init__(self):
 		"""Constructs instance of Tahrir."""
-		super(Maximus, self).__init__()		
+		super(Tahrir, self).__init__()		
 		self.set_position(gtk.WIN_POS_CENTER_ALWAYS)
-		self.windowTitle = 'Maximus'
+		self.windowTitle = 'Tahrir'
 		self.set_title(self.windowTitle)
 		self.resize(700,550)
 		self.connect('delete-event', self.on_delete_event)
@@ -36,6 +36,8 @@ class Maximus(gtk.Window):
 			#doc = self.handler.tabbar.docs[i]
 			#lines = self.handler.tabbar.lineNumbers[i]
 			#self.handler.tabbar.close_tab(doc, lines)
+		
+		
 		self.hide()
 		self.destroy_app()
 		return True
@@ -46,5 +48,5 @@ class Maximus(gtk.Window):
 	def destroy_app(self):
 		gtk.main_quit()	
 		
-Maximus()
+Tahrir()
 gtk.main()

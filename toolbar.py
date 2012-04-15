@@ -73,22 +73,54 @@ class Toolbar(gtk.Toolbar):
 		#
 		self.actions['search'] = gtk.ToolItem()
 		self.search_entry = gtk.Entry()
+		self.search_entry.connect('changed', self.do_search)
 		self.actions['search'].add(self.search_entry)
 		self.insert(self.actions['search'], -1)
+		#
+		self.actions['search_forward'] = gtk.ToolButton(gtk.STOCK_GO_DOWN)
+		direction = 'forward'
+		self.actions['search_forward'].connect('clicked', self.search_forward)
+		self.insert(self.actions['search_forward'], -1)
+		#
+		self.actions['search_backward'] = gtk.ToolButton(gtk.STOCK_GO_UP)
+		self.actions['search_backward'].connect('clicked', self.search_backward)
+		self.insert(self.actions['search_backward'], -1)
 		#
 		self.actions['settings'] = gtk.ToolButton(gtk.STOCK_PREFERENCES)
 		self.actions['settings'].set_tooltip_text('Adjust Settings')
 		self.actions['settings'].connect('clicked', self.handler.run_settings_dialog)
 		self.insert(self.actions['settings'], -1)
-
-	def activate_actions(self, widget):
+		
+	def do_search(self, widget):
+		parameter =  self.search_entry.get_text()
+		self.handler.search_doc(parameter)
+		
+	def search_forward(self, widget):
+		parameter =  self.search_entry.get_text()
+		self.handler.search_forward(parameter)
+		
+	def search_backward(self, widget):
+		parameter =  self.search_entry.get_text()
+		self.handler.search_backward(parameter)
+		
+	def activate_save_button(self):
 		self.actions['save'].set_sensitive(True)
+		
+	def deactivate_save_button(self):
+		self.actions['save'].set_sensitive(False)
+		
+	def activate_actions(self, widget):
+		self.actions['cut'].set_sensitive(True)
+		self.actions['copy'].set_sensitive(True)
+		self.actions['paste'].set_sensitive(True)
 		self.actions['undo'].set_sensitive(True)
 		self.actions['redo'].set_sensitive(True)
 
 		
 	def deactivate_actions(self):
-		self.actions['save'].set_sensitive(False)
+		self.actions['cut'].set_sensitive(False)
+		self.actions['copy'].set_sensitive(False)
+		self.actions['paste'].set_sensitive(False)
 		self.actions['undo'].set_sensitive(False)
 		self.actions['redo'].set_sensitive(False)
 

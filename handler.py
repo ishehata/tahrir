@@ -51,7 +51,7 @@ class Handler():
 				text = doc.get_text()
 				f.write(text)
 				f.close()
-				doc.lastSaved = text
+				doc.buffer.set_modified(False)
 				self.current_folder = d.get_current_folder()
 				self.toolbar.actions['save'].set_sensitive(False)
 				self.tabbar.labels[tab_num].set_text(self.strip_filename(filePath))
@@ -92,7 +92,22 @@ class Handler():
 	def set_numbers(self, widget):
 		tab = self.tabbar.get_current_page()
 		self.tabbar.lineNumbers[tab].set_numbers()
-	
+		
+	def search_doc(self, parameter):
+		tab = self.tabbar.get_current_page()
+		doc = self.tabbar.docs[tab]
+		doc.search(parameter)
+		
+	def search_forward(self, parameter):
+		tab = self.tabbar.get_current_page()
+		doc = self.tabbar.docs[tab]
+		doc.search_forward(parameter)
+		
+	def search_backward(self, parameter):
+		tab = self.tabbar.get_current_page()
+		doc = self.tabbar.docs[tab]
+		doc.search_backward(parameter)
+		
 	def prompt_save_dialog(self):
 		d = gtk.MessageDialog(None,  gtk.DIALOG_MODAL,  gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE, None)
 		d.add_button('Don\'t Save', -1)
