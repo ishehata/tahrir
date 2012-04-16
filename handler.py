@@ -1,5 +1,9 @@
-import gtk
-import settings, toolbar, tabbar, textview, lines, getpass
+#!/usr/bin/python
+
+#import Gtk, os
+import settings, toolbar, tabbar, textview, lines, getpass, os
+from gi.repository import Gtk, Gio, GObject
+
 
 class Handler():
 	"""Class Handler() is the controller that handles most of the operations between Models."""
@@ -13,14 +17,14 @@ class Handler():
 		self.toolbar = toolbar.Toolbar(self)
 		self.tabbar = tabbar.Tabbar(self)
 		self.current_folder = ('/home/'+getpass.getuser())
-
+		
 		
 	def on_click_new(self, widget):
 		self.tabbar.create_new_tab()
 	
 	def on_click_open(self, widget):
-		d = gtk.FileChooserDialog('Choose File', None, gtk.FILE_CHOOSER_ACTION_OPEN,
-			(gtk.STOCK_CANCEL, 0, gtk.STOCK_OPEN, 1), None)
+		d = Gtk.FileChooserDialog('Choose File', None, Gtk.FILE_CHOOSER_ACTION_OPEN,
+			(Gtk.STOCK_CANCEL, 0, Gtk.STOCK_OPEN, 1), None)
 		d.set_default_response(1)
 		d.set_current_folder(self.current_folder)
 		if d.run() == 1:
@@ -31,10 +35,19 @@ class Handler():
 			self.tabbar.create_new_tab(filename, text, filePath)
 		self.current_folder = d.get_current_folder()
 		d.destroy()
+		os.system('notify-send "Tahrir" "file opened"')
 		
 	def on_click_save(self, widget):
 		tab_num = self.tabbar.get_current_page()
 		self.save_doc(tab_num)
+		
+	def on_click_undo(self, widget):
+		tab = self.tabbar.get_current_page()
+		self.tabbar.docs[tab].undo()
+		
+	def on_click_redo(self, widget):
+		tab = self.tabbar.get_current_page()
+		self.tabbar.docs[tab].redo()
 		
 	def save_doc(self, tab_num):
 		doc = self.tabbar.docs[tab_num]
@@ -63,10 +76,10 @@ class Handler():
 			self.toolbar.actions['save'].set_sensitive(False)
 			doc.buffer.set_modified(False)
 			self.tabbar.set_tab_clean()
-		
+		os.system('notify-send "Tahrir" "file saved"')
 	def save_dialog(self):
-		d = gtk.FileChooserDialog('Save Document', None, gtk.FILE_CHOOSER_ACTION_SAVE,
-			(gtk.STOCK_CANCEL, 0, gtk.STOCK_SAVE, 1), None)
+		d = Gtk.FileChooserDialog('Save Document', None, Gtk.FILE_CHOOSER_ACTION_SAVE,
+			(Gtk.STOCK_CANCEL, 0, Gtk.STOCK_SAVE, 1), None)
 		d.set_current_folder(self.current_folder)
 		d.set_default_response(1)
 		return d
@@ -108,7 +121,7 @@ class Handler():
 		doc.search_backward(parameter)
 		
 	def prompt_save_dialog(self):
-		d = gtk.MessageDialog(None,  gtk.DIALOG_MODAL,  gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE, None)
+		d = Gtk.MessageDialog(None,  Gtk.DIALOG_MODAL,  Gtk.MESSAGE_QUESTION, Gtk.BUTTONS_NONE, None)
 		d.add_button('Don\'t Save', -1)
 		d.add_button('Cancel', 0)
 		d.add_button('Save', 1)

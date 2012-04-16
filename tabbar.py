@@ -1,6 +1,9 @@
-import gtk, textview, lines
+#!/usr/bin/python
 
-class Tabbar(gtk.Notebook):
+import textview, lines
+from gi.repository import Gtk, Gio, GObject
+
+class Tabbar(Gtk.Notebook):
 	"""Class Tabbar() is a GtkNotebook, which contains tabs, textview and lines number inside it."""
 	
 	def __init__(self, handler):
@@ -9,6 +12,7 @@ class Tabbar(gtk.Notebook):
 		self.set_can_focus(False)
 		self.set_scrollable(True)
 		self.set_show_border(False)
+		#self.set_tab_pos(Gtk.Position.BOTTOM)
 		self.docs = []
 		self.lineNumbers = []
 		self.labels = []
@@ -33,28 +37,29 @@ class Tabbar(gtk.Notebook):
 	def create_new_tab(self, label = 'Untitled Document', text='', filename=None):
 		"""This functions adds a new tab to the GtkNotebook, the net tab has a GtkScrolledWindow as a child,
 			which containes lines number and GtkTextView."""
-		tab = gtk.HBox()
-		gtkLabel = gtk.Label(label)
-		self.labels.append(gtkLabel)
+		tab = Gtk.HBox()
+		GtkLabel = Gtk.Label(label)
+		self.labels.append(GtkLabel)
 		self.strLabels.append(label)
-		image = gtk.Image()
-		image.set_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
-		close = gtk.Button()
-		close.set_image(image)
-		close.set_relief(gtk.RELIEF_NONE)
+		image = Gtk.Image()
+		#image.set_from_stock(Gtk.STOCK_CLOSE, Gtk.ICON_SIZE_MENU)
+		close = Gtk.Button()
+		#close.set_image(image)
+		#close.set_relief(Gtk.RELIEF_NONE)
 		close.set_focus_on_click(False)
-		tab.pack_start(self.labels[-1])
+		#print close.get_relief()
+		tab.pack_start(self.labels[-1], True, True, 0)
 		tab.pack_start(close, False, False, 0)
 		tab.show_all()
-		sw = gtk.ScrolledWindow()
-		sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)	
-		hbox = gtk.HBox()
+		sw = Gtk.ScrolledWindow()
+		sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)	
+		hbox = Gtk.HBox()
 		doc = textview.Document(self.handler, self.handler.get_option('textview_bg'), self.handler.get_option('textview_font_color'), text)
 		self.docs.append(doc)
 		lineNumbers = lines.LineNumbers(self.handler, doc, self.handler.get_option('lines_bg'), self.handler.get_option('lines_font_color'))
 		self.lineNumbers.append(lineNumbers)
 		hbox.pack_start(self.lineNumbers[-1], False, False, 0)
-		hbox.pack_start(self.docs[-1])
+		hbox.pack_start(self.docs[-1], True, True, 0)
 		hbox.show_all()
 		sw.add_with_viewport(hbox)
 		self.append_page(sw, tab)

@@ -1,6 +1,9 @@
-import gtk
+#!/usr/bin/python
 
-class LineNumbers(gtk.TextView):
+#import Gtk
+from gi.repository import Gtk, Gio, GObject
+
+class LineNumbers(Gtk.TextView):
 	"""Class Documents creates GtkTextView widget, which maintains text processing functions."""
 	def __init__(self, handler, doc, bg, fontColor):
 		super(LineNumbers, self).__init__()
@@ -10,7 +13,7 @@ class LineNumbers(gtk.TextView):
 		self.doc = doc
 		self.set_right_margin(5)
 		self.set_left_margin(5)
-		self.buffer = gtk.TextBuffer()
+		self.buffer = Gtk.TextBuffer()
 		self.set_buffer(self.buffer)
 		self.set_style(bg, fontColor)
 		self.set_numbers()
@@ -22,5 +25,6 @@ class LineNumbers(gtk.TextView):
 			self.buffer.insert(self.buffer.get_end_iter(), '%d \n' % num)
 			
 	def set_style(self, bg, fontColor):
-		self.modify_base(gtk.STATE_NORMAL, gtk.gdk.Color(bg))
-		self.modify_text(gtk.STATE_NORMAL, gtk.gdk.Color(fontColor))
+		#self.modify_base(Gtk.STATE_NORMAL, Gtk.gdk.Color(bg))
+		#self.modify_text(Gtk.STATE_NORMAL, Gtk.gdk.Color(fontColor))
+		pass

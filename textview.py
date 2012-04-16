@@ -1,12 +1,14 @@
-import gtk
+#!/usr/bin/python
 
-class Document(gtk.TextView):
+#import Gtk
+from gi.repository import Gtk, Gio, GObject
+
+class Document(Gtk.TextView):
 	"""Class Documents creates GtkTextView widget, which maintains text processing functions."""
 	def __init__(self, handler, bg, fontColor, text):
 		super(Document, self).__init__()
 		self.handler = handler
-		self.tagTable = gtk.TextTagTable()
-		self.buffer = gtk.TextBuffer(self.tagTable)
+		self.buffer = Gtk.TextBuffer()
 		self.buffer.set_modified(False)
 		self.set_buffer(self.buffer)
 		self.set_style(bg, fontColor)
@@ -22,13 +24,27 @@ class Document(gtk.TextView):
 		self.buffer.connect('changed', self.do_highlight)
 		self.buffer.connect('changed', self.set_modified)
 		self.buffer.connect('changed', self.indicate_unsaved_changes)
-		
-		self.clipboard = gtk.Clipboard()
+		self.toUndo = []
+		self.toRedo = []
+		self.actions = Gtk.Clipboard()
+		self.clipboard = Gtk.Clipboard()
 		self.searchTag = self.buffer.create_tag('yellowBackground')
 		self.searchTag.set_property('background', 'yellow')
 		
 		
 	def set_modified(self, widgit):
+		self.buffer.set_modified(True)
+		self.toUndo.append(self.get_text())
+		
+	def undo(self):
+		self.toRedo.append(self.get_text())
+		toUndo = self.toUndo[-1]
+		self.buffer.set_text(toUndo)
+		#self.toUndo.del(-1)
+		self.buffer.set_modified(True)
+	
+	def redo(self):
+		self.buffer.set_text(self.toRedo.pop())
 		self.buffer.set_modified(True)
 		
 	def has_unsaved_changes(self, widget):
@@ -107,8 +123,9 @@ class Document(gtk.TextView):
 				
 		
 	def set_style(self, bg, fontColor):
-		self.modify_base(gtk.STATE_NORMAL, gtk.gdk.Color(bg))
-		self.modify_text(gtk.STATE_NORMAL, gtk.gdk.Color(fontColor))
+		#self.modify_base(Gtk.STATE_NORMAL, Gtk.gdk.Color(bg))
+		#self.modify_text(Gtk.STATE_NORMAL, Gtk.gdk.Color(fontColor))
+		pass
 		
 	def get_text(self):
 		text = self.buffer.get_text(self.buffer.get_start_iter(), self.buffer.get_end_iter())

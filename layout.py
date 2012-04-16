@@ -1,11 +1,15 @@
-import gtk
+#!/usr/bin/python
 
-class Layout(gtk.VBox):
+#import Gtk
+from gi.repository import Gtk, Gio, GObject
+
+class Layout(Gtk.Box):
 	"""class Layout() holds the main design of the text editor."""
 	
 	def __init__(self, handlerClass):
 		"""Constructs instance of Layout()."""
 		super(Layout, self).__init__()
+		self.set_property('orientation', Gtk.Orientation.VERTICAL)
 		self.handler = handlerClass
 		self.init_layout()
 		self.show_all()

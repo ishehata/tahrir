@@ -1,15 +1,20 @@
-import gtk, handler, layout
+#!/usr/bin/python
 
-class Tahrir(gtk.Window):
+#import Gtk, handler, layout
+import handler, layout
+from gi.repository import Gtk, Gio, GObject
+
+class Tahrir(Gtk.Window):
 	"""Tahrir is a neat,simple and elegant text editor."""
 	
 	def __init__(self):
 		"""Constructs instance of Tahrir."""
 		super(Tahrir, self).__init__()		
-		self.set_position(gtk.WIN_POS_CENTER_ALWAYS)
+		#self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
 		self.windowTitle = 'Tahrir'
 		self.set_title(self.windowTitle)
 		self.resize(700,550)
+		
 		self.connect('delete-event', self.on_delete_event)
 		self.init_comp()
 		self.show_all()
@@ -35,9 +40,7 @@ class Tahrir(gtk.Window):
 		#for i in range(0, tabsNumber):
 			#doc = self.handler.tabbar.docs[i]
 			#lines = self.handler.tabbar.lineNumbers[i]
-			#self.handler.tabbar.close_tab(doc, lines)
-		
-		
+			#self.handler.tabbar.close_tab(doc, lines)		
 		self.hide()
 		self.destroy_app()
 		return True
@@ -46,7 +49,7 @@ class Tahrir(gtk.Window):
 #				self.destroy_app()
 				
 	def destroy_app(self):
-		gtk.main_quit()	
+		Gtk.main_quit()	
 		
 Tahrir()
-gtk.main()
+Gtk.main()
