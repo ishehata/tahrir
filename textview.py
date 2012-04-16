@@ -15,6 +15,8 @@ class Document(gtk.TextView):
 		self.boldBlue = self.buffer.create_tag('boldBlue')
 		self.boldBlue.set_property('foreground', 'blue')
 		self.boldBlue.set_property('weight', 700)
+		self.green = self.buffer.create_tag('green')
+		self.green.set_property('foreground', 'green')
 		self.do_highlight(None)
 		self.buffer.connect('changed', self.handler.set_numbers)
 		self.buffer.connect('changed', self.do_highlight)
@@ -97,6 +99,11 @@ class Document(gtk.TextView):
 			if result:
 				for iter in result:
 					self.buffer.apply_tag(self.boldBlue, iter[0], iter[1])
+		for num in '0123456789':
+			result = self.find_text(num)
+			if result:
+				for iter in result:
+					self.buffer.apply_tag(self.green, iter[0], iter[1])
 				
 		
 	def set_style(self, bg, fontColor):
