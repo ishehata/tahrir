@@ -26,11 +26,9 @@ class Handler():
 		if d.run() == 1:
 			filePath = d.get_filename()
 			filename = self.strip_filename(filePath)
-			#self.mainWindow.set_window_title(filename)
 			f = open(filePath, 'r')
 			text = f.read()
 			self.tabbar.create_new_tab(filename, text, filePath)
-			self.tabbar.docs[-1].lastSaved = text
 		self.current_folder = d.get_current_folder()
 		d.destroy()
 		
@@ -62,8 +60,9 @@ class Handler():
 			text = doc.get_text()
 			f.write(text)
 			f.close()
-			doc.lastSaved = text
 			self.toolbar.actions['save'].set_sensitive(False)
+			doc.buffer.set_modified(False)
+			self.tabbar.set_tab_clean()
 		
 	def save_dialog(self):
 		d = gtk.FileChooserDialog('Save Document', None, gtk.FILE_CHOOSER_ACTION_SAVE,

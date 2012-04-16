@@ -12,9 +12,9 @@ class Tabbar(gtk.Notebook):
 		self.docs = []
 		self.lineNumbers = []
 		self.labels = []
+		self.strLabels = []
 		self.files = []
 		self.init_tab()
-		self.connect('change-current-page', self.check_actions)
 		self.connect('page-removed', self.set_actions_off)
 		
 
@@ -36,6 +36,7 @@ class Tabbar(gtk.Notebook):
 		tab = gtk.HBox()
 		gtkLabel = gtk.Label(label)
 		self.labels.append(gtkLabel)
+		self.strLabels.append(label)
 		image = gtk.Image()
 		image.set_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
 		close = gtk.Button()
@@ -68,7 +69,19 @@ class Tabbar(gtk.Notebook):
 		close.connect('clicked', self.on_click_close, sw, doc, lineNumbers, filename)
 		self.handler.toolbar.activate_actions(None)
 	
+	def set_tab_dirty(self):
+		tab = self.get_current_page()
+		label = self.labels[tab].get_text()
+		if label[0] == '*':
+			pass
+		else:
+			self.labels[tab].set_text('* '+label)
 		
+	def set_tab_clean(self):
+		tab = self.get_current_page()
+		label = self.labels[tab].get_text()
+		label = label[1:]
+		self.labels[tab].set_text(label)
 		
 		
 	def on_click_close(self, widget, sw, doc, lineNumbers, filePath):
@@ -99,7 +112,6 @@ class Tabbar(gtk.Notebook):
 	
 	def close_tab(self, sw, doc, lineNumbers, filePath):
 		tab = self.page_num(sw)
-		print tab
 		#self.set_current_page(tab)
 		#if doc.has_unsaved_changes() == False:
 		if doc.buffer.get_modified() == False:
@@ -122,11 +134,3 @@ class Tabbar(gtk.Notebook):
 				self.lineNumbers.remove(lineNumbers)
 			d.destroy()
 			
-	def check_actions(self, widget):
-		tab = self.get_current_page()
-		if self.docs[tab].has_unsaved_changes == True:
-			self.handler.toolbar.actions['save'].set_sensitive(True)
-		else:
-			self.handler.toolbar.actions['save'].set_sensitive(False)
-		
-

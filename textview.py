@@ -14,20 +14,31 @@ class Document(gtk.TextView):
 		self.set_left_margin(5)
 		self.boldBlue = self.buffer.create_tag('boldBlue')
 		self.boldBlue.set_property('foreground', 'blue')
+		self.boldBlue.set_property('weight', 700)
 		self.do_highlight(None)
 		self.buffer.connect('changed', self.handler.set_numbers)
 		self.buffer.connect('changed', self.do_highlight)
-		self.buffer.connect('changed', self.set_buffer_modified)
-		#self.buffer.connect('modified_changed', self.handler.toolbar.activate_actions)
+		self.buffer.connect('changed', self.set_modified)
+		self.buffer.connect('changed', self.indicate_unsaved_changes)
 		
 		self.clipboard = gtk.Clipboard()
 		self.searchTag = self.buffer.create_tag('yellowBackground')
 		self.searchTag.set_property('background', 'yellow')
 		
 		
-	def set_buffer_modified(self, widget):
+	def set_modified(self, widgit):
 		self.buffer.set_modified(True)
-		self.handler.toolbar.activate_save_button()
+		
+	def has_unsaved_changes(self, widget):
+		if self.buffer.get_modified() == True:
+			return True
+		else:
+			return False
+	
+	def indicate_unsaved_changes(self, widget):
+		if self.buffer.get_modified() == True:
+			self.handler.toolbar.activate_save_button()
+			self.handler.tabbar.set_tab_dirty()
 		
 	def search(self, parameter):
 		self.buffer.remove_tag(self.searchTag, self.buffer.get_start_iter(), self.buffer.get_end_iter())
@@ -80,7 +91,7 @@ class Document(gtk.TextView):
 	def do_highlight(self, widget):
 		self.iters = []
 		start_iter = self.buffer.get_start_iter()
-		inBoldBlue = ['def', 'if', 'True', 'for', 'False', 'While', 'pass', 'break', 'return', 'elif', 'else']
+		inBoldBlue = ['def', 'if', 'True', 'for', 'False', 'While', 'pass', 'break', 'return', 'elif', 'else', 'class', 'import', 'self', 'while', 'do']
 		for term in inBoldBlue:
 			result = self.find_text(term)
 			if result:
@@ -96,12 +107,6 @@ class Document(gtk.TextView):
 		text = self.buffer.get_text(self.buffer.get_start_iter(), self.buffer.get_end_iter())
 		return text
 		
-	def has_unsaved_changes(self):
-		text = self.get_text()
-		if text == self.lastSaved:
-			return False
-		elif text != self.lastSaved:
-			return True
 			
 	def cut_text(self):
 		self.buffer.cut_clipboard(self.clipboard, self.get_editable())
