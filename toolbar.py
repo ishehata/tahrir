@@ -88,6 +88,7 @@ class Toolbar(Gtk.Toolbar):
 		self.actions['search'] = Gtk.ToolItem()
 		self.search_entry = Gtk.Entry()
 		self.search_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, Gtk.STOCK_FIND)
+		self.search_entry.set_placeholder_text('Type to search ..')
 		self.search_entry.connect('changed', self.do_search)
 		self.actions['search'].add(self.search_entry)
 		self.insert(self.actions['search'], -1)
