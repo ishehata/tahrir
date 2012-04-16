@@ -10,7 +10,7 @@ class Tahrir(Gtk.Window):
 	def __init__(self):
 		"""Constructs instance of Tahrir."""
 		super(Tahrir, self).__init__()		
-		#self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
+		self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
 		self.windowTitle = 'Tahrir'
 		self.set_title(self.windowTitle)
 		self.resize(700,550)

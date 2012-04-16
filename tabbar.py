@@ -12,7 +12,7 @@ class Tabbar(Gtk.Notebook):
 		self.set_can_focus(False)
 		self.set_scrollable(True)
 		self.set_show_border(False)
-		#self.set_tab_pos(Gtk.Position.BOTTOM)
+		self.set_tab_pos(Gtk.PositionType.BOTTOM)
 		self.docs = []
 		self.lineNumbers = []
 		self.labels = []
@@ -42,12 +42,11 @@ class Tabbar(Gtk.Notebook):
 		self.labels.append(GtkLabel)
 		self.strLabels.append(label)
 		image = Gtk.Image()
-		#image.set_from_stock(Gtk.STOCK_CLOSE, Gtk.ICON_SIZE_MENU)
+		image.set_from_stock(Gtk.STOCK_CLOSE, Gtk.IconSize.MENU)
 		close = Gtk.Button()
-		#close.set_image(image)
-		#close.set_relief(Gtk.RELIEF_NONE)
+		close.set_image(image)
+		close.set_relief(Gtk.ReliefStyle.NONE)
 		close.set_focus_on_click(False)
-		#print close.get_relief()
 		tab.pack_start(self.labels[-1], True, True, 0)
 		tab.pack_start(close, False, False, 0)
 		tab.show_all()

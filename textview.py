@@ -128,7 +128,7 @@ class Document(Gtk.TextView):
 		pass
 		
 	def get_text(self):
-		text = self.buffer.get_text(self.buffer.get_start_iter(), self.buffer.get_end_iter())
+		text = self.buffer.get_text(self.buffer.get_start_iter(), self.buffer.get_end_iter(), False)
 		return text
 		
 			
