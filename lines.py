@@ -10,6 +10,9 @@ class LineNumbers(Gtk.TextView):
 		self.set_can_focus(False)
 		self.set_editable(False)
 		self.set_cursor_visible(False)
+		context = self.get_style_context()
+		#context.set_background(Gtk.STYLE_PROPERTY_BACKGROUND_COLOR)
+		
 		self.doc = doc
 		self.set_right_margin(5)
 		self.set_left_margin(5)
@@ -25,6 +28,7 @@ class LineNumbers(Gtk.TextView):
 			self.buffer.insert(self.buffer.get_end_iter(), '%d \n' % num)
 			
 	def set_style(self, bg, fontColor):
-		#self.modify_base(Gtk.STATE_NORMAL, Gtk.gdk.Color(bg))
-		#self.modify_text(Gtk.STATE_NORMAL, Gtk.gdk.Color(fontColor))
+		#self.modify_base(Gtk.StateType.NORMAL, Gtk.gdk.Color(bg))
+		#self.modify_text(Gtk.StateType.NORMAL, Gtk.gdk.Color(fontColor))
 		pass
+		

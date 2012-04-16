@@ -23,8 +23,8 @@ class Handler():
 		self.tabbar.create_new_tab()
 	
 	def on_click_open(self, widget):
-		d = Gtk.FileChooserDialog('Choose File', None, Gtk.FILE_CHOOSER_ACTION_OPEN,
-			(Gtk.STOCK_CANCEL, 0, Gtk.STOCK_OPEN, 1), None)
+		d = Gtk.FileChooserDialog('Choose File', None, Gtk.FileChooserAction.OPEN,
+			(Gtk.STOCK_CANCEL, 0, Gtk.STOCK_OPEN, 1))
 		d.set_default_response(1)
 		d.set_current_folder(self.current_folder)
 		if d.run() == 1:
@@ -77,9 +77,10 @@ class Handler():
 			doc.buffer.set_modified(False)
 			self.tabbar.set_tab_clean()
 		os.system('notify-send "Tahrir" "file saved"')
+		
 	def save_dialog(self):
-		d = Gtk.FileChooserDialog('Save Document', None, Gtk.FILE_CHOOSER_ACTION_SAVE,
-			(Gtk.STOCK_CANCEL, 0, Gtk.STOCK_SAVE, 1), None)
+		d = Gtk.FileChooserDialog('Save Document', None, Gtk.FileChooserAction.SAVE,
+			(Gtk.STOCK_CANCEL, 0, Gtk.STOCK_SAVE, 1))
 		d.set_current_folder(self.current_folder)
 		d.set_default_response(1)
 		return d
@@ -121,7 +122,7 @@ class Handler():
 		doc.search_backward(parameter)
 		
 	def prompt_save_dialog(self):
-		d = Gtk.MessageDialog(None,  Gtk.DIALOG_MODAL,  Gtk.MESSAGE_QUESTION, Gtk.BUTTONS_NONE, None)
+		d = Gtk.MessageDialog(None,  Gtk.DialogFlags.MODAL,  Gtk.MessageType.QUESTION, Gtk.ButtonsType.NONE, None)
 		d.add_button('Don\'t Save', -1)
 		d.add_button('Cancel', 0)
 		d.add_button('Save', 1)

@@ -123,9 +123,10 @@ class Document(Gtk.TextView):
 				
 		
 	def set_style(self, bg, fontColor):
-		#self.modify_base(Gtk.STATE_NORMAL, Gtk.gdk.Color(bg))
-		#self.modify_text(Gtk.STATE_NORMAL, Gtk.gdk.Color(fontColor))
+		#self.modify_base(Gtk.StateType.NORMAL, Gtk.gdk.Color(bg))
+		#self.modify_text(Gtk.StateType.NORMAL, Gtk.gdk.Color(fontColor))
 		pass
+		
 		
 	def get_text(self):
 		text = self.buffer.get_text(self.buffer.get_start_iter(), self.buffer.get_end_iter(), False)

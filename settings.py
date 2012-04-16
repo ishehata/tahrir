@@ -9,8 +9,8 @@ class Settings(Gtk.Window):
 	def __init__(self, handler):
 		"""Constructs instance of Settings()."""
 		super(Settings, self).__init__()
-		self.set_title('Maximus - Settings Manager')
-		#self.set_position(Gtk.WIN_POS_CENTER_ALWAYS)
+		self.set_title('Tahrir - Settings Manager')
+		self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
 		self.resize(450,300)
 		self.handler = handler
 		self.set_layout()
@@ -23,13 +23,15 @@ class Settings(Gtk.Window):
 		## Tab 'view'
 		mainBox = Gtk.VBox()
 		#Show Lines Number
-		firstOption = Gtk.HBox()
-		showLinesNumber = Gtk.CheckButton('Show lines number')
+		firstOption = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=15)
+		showLinesNumber = Gtk.Switch()
+		showLinesNumberLabel = Gtk.Label('Display Line Numbers')
 		if self.handler.get_option('show_line_numbers') == 'True':
 			showLinesNumber.set_active(True)
 		else:
 			showLinesNumber.set_active(False)
-		showLinesNumber.connect('toggled', self.handler.set_show_line_numbers)
+		showLinesNumber.connect('activate', self.handler.set_show_line_numbers)
+		firstOption.pack_start(showLinesNumberLabel, False, False, 0)
 		firstOption.pack_start(showLinesNumber, False, False, 0)
 		#TextView background
 		secOption = Gtk.HBox(False, False)
@@ -56,5 +58,5 @@ class Settings(Gtk.Window):
 	def run(self):
 		self.show_all()
 		
-	def on_delete_event(self, widget):
-		self.hide_all()
+	def on_delete_event(self, widget, data):
+		self.destroy()

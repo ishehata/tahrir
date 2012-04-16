@@ -12,7 +12,7 @@ class Tabbar(Gtk.Notebook):
 		self.set_can_focus(False)
 		self.set_scrollable(True)
 		self.set_show_border(False)
-		self.set_tab_pos(Gtk.PositionType.BOTTOM)
+		#self.set_tab_pos(Gtk.PositionType.BOTTOM)
 		self.docs = []
 		self.lineNumbers = []
 		self.labels = []
